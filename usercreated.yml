@@ -1,0 +1,53 @@
+---
+- hosts: all
+  remote_user: vagrant
+  tasks:
+
+   
+    - name: create the user 
+      become: true
+      become_method: sudo 
+      command:  adduser --disabled-password --force-badname  --gecos ""  sharath
+    - name: set Time zone
+      become: true
+      become_method: sudo
+      copy: content='Asia/Kolkata'
+            dest=/etc/timezone
+            owner=root
+            group=root
+            mode=0644
+            backup=yes
+      notify:
+        - update timezone
+
+    - name: Ansible copy file force
+      copy:
+        src: ~/sample.txt
+        dest: /tmp
+        force: no
+
+    - name: install the python
+      become: true
+      become_user: sudo 
+      command:   apt-get -y install python
+
+    - name: install the supervisor
+      become: true
+      become_user: sudo
+      command: easy_install supervisor
+     
+    - name:  latest version of consul
+      become: true
+      become_user: sudo
+      command: wget https://www.consul.io/downloads.html
+
+  handlers:
+    - name: update timezone
+      become: true
+      become_method: sudo
+      command: dpkg-reconfigure --frontend noninteractive tzdata
+
+
+ 
+     
+    

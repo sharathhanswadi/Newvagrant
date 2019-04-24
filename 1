@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  tasks:
+
+    - include: pre_puppet_users.yml
+    - name: create the user 
+      become: true
+      become_method: sudo 
+     command:  adduser --disabled-password --force-badname  --gecos "" "{{ item.name}}"
+ 
+     
+    
